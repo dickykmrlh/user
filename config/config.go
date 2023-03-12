@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/joho/godotenv"
@@ -12,13 +11,13 @@ var cfg *Config
 
 func NewConfig() {
 	if err := godotenv.Load(); err != nil {
-		log.Fatal(fmt.Errorf("fail to load env variables, %s", err))
+		log.Fatal("fail to load env variables, ", err)
 	}
 
 	cfg = &Config{}
 	err := envconfig.Process("", cfg)
 	if err != nil {
-		log.Fatal(fmt.Errorf("fail to process config, %s", err))
+		log.Fatal("fail to process config, ", err)
 	}
 }
 
@@ -39,7 +38,6 @@ type Config struct {
 }
 
 type DB struct {
-	RunMigration    bool   `envconfig:"DB_RUN_MIGRATION"`
 	Host            string `envconfig:"DB_HOST"`
 	Port            int    `envconfig:"DB_PORT"`
 	DBName          string `envconfig:"DB_NAME"`
@@ -51,4 +49,6 @@ type DB struct {
 	MaxOpenCons     int    `envconfig:"DB_MAX_OPEN_CON" default:"5"`
 	ConnMaxLifetime int    `envconfig:"DB_CONN_MAX_LIFE_TIME" default:"10"`
 	ConnMaxIdleTime int    `envconfig:"DB_CONN_MAX_IDLE_TIME" default:"10"`
+	MigrationRun    bool   `envconfig:"DB_MIGRATION_RUN"`
+	MigrationPath   string `envconfig:"DB_MIGRATION_PATH"`
 }
