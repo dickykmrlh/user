@@ -12,5 +12,9 @@ endif
 test:
 	go test ./... -race -count=1 -cover
 
+run:
+	go build -o profile ./...
+	./profile
+
 lint:
 	golangci-lint run ./...
