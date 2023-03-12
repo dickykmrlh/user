@@ -7,7 +7,7 @@ services:
       ["postgres", "-c", "log_statement=all", "-c", "log_destination=stderr"]
     container_name: profile-db
     ports:
-      - 54321:54321
+      - 54321:5432
     networks:
       - profile-default
     environment:

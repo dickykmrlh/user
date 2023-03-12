@@ -13,8 +13,8 @@ test:
 	go test ./... -race -count=1 -cover
 
 run:
-	go build -o profile ./...
-	./profile
+	go build -o bin/profile cmd/profile.go
+	./bin/profile
 
 lint:
 	golangci-lint run ./...
