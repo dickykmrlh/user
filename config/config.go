@@ -39,5 +39,6 @@ type DB struct {
 	Port         int    `env:"DB_PORT" envDefault:"5432"`
 	DBName       string `env:"DB_NAME" envDefault:"gym"`
 	Username     string `env:"DB_USERNAME"`
-	Password     string `env:"DB_PASSWORD" secret:"GYM_DB_PASSWORD"`
+	Password     string `env:"DB_PASSWORD"`
+	SSLMode      string `env:"DB_SSL_MODE"`
 }
