@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  profile-db:
+    image: postgres:latest
+    command:
+      ["postgres", "-c", "log_statement=all", "-c", "log_destination=stderr"]
+    container_name: profile-db
+    ports:
+      - 54321:54321
+    networks:
+      - profile-default
+    environment:
+      POSTGRES_USER: profile
+      POSTGRES_PASSWORD: profile
+      POSTGRES_DB: profile_test
+      POSTGRES_HOST_AUTH_METHOD: trust
+
+networks:
+  profile-default:
+    external: true
