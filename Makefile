@@ -9,6 +9,9 @@ ifeq ($(NETWORK),)
 endif
 	docker-compose up -d
 
+migrate-create:
+	migrate create -ext sql -dir ./internal/repository/migrations $(name)
+
 test:
 	go test ./... -race -count=1 -cover
 

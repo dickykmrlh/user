@@ -8,4 +8,5 @@ import (
 func main() {
 	config.NewConfig()
 	repository.NewDBConn()
+	repository.RunningMigration()
 }
