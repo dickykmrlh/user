@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/dickykmrlh/profile/config"
+	"github.com/dickykmrlh/user/config"
 	_ "github.com/lib/pq"
 )
 
