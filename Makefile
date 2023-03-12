@@ -13,7 +13,7 @@ test:
 	go test ./... -race -count=1 -cover
 
 run:
-	go build -o bin/profile cmd/profile.go
+	go build -o bin/profile cmd/user.go
 	./bin/profile
 
 lint:
