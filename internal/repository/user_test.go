@@ -52,7 +52,7 @@ func TestUserRepo_GetUser(t *testing.T) {
 		expctedUser := &domain.User{
 			ID:          uuid.MustParse("a6671da6-90db-11ed-a9f2-170300000000"),
 			FirstName:   "Dicky",
-			LastName:    "Kamaulah",
+			LastName:    "Kamarulah",
 			Role:        domain.SuperAdminUserRole,
 			PhoneNumber: "+628123456789",
 			Email:       "dicky@aja.com",
