@@ -3,17 +3,12 @@ package config
 import (
 	"log"
 
-	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 )
 
 var cfg *Config
 
-func NewConfig() {
-	if err := godotenv.Load(); err != nil {
-		log.Fatal("fail to load env variables, ", err)
-	}
-
+func InitConfig() {
 	cfg = &Config{}
 	err := envconfig.Process("", cfg)
 	if err != nil {
@@ -23,7 +18,8 @@ func NewConfig() {
 
 func GetConfig() *Config {
 	if cfg == nil {
-		log.Fatal("config is not initialize")
+		InitConfig()
+		return cfg
 	}
 
 	return cfg

@@ -1,4 +1,5 @@
 #!make
+.PHONY: all test clean
 
 SHELL := /bin/bash
 NETWORK := $(shell docker network ls | grep profile-default)

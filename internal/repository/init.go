@@ -13,9 +13,18 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var db *sql.DB
+var dbInstance *sql.DB
 
-func NewDBConn() {
+func GetDB() *sql.DB {
+	if dbInstance == nil {
+		InitDBConn()
+		return dbInstance
+	}
+
+	return dbInstance
+}
+
+func InitDBConn() {
 	dbConfig := config.GetConfig().GetDBConfig()
 
 	log.Print("connecting to DB")
@@ -29,24 +38,26 @@ func NewDBConn() {
 		dbConfig.SSLMode)
 
 	var err error
-	db, err = sql.Open("postgres", dsn)
+	dbInstance, err = sql.Open("postgres", dsn)
 	if err != nil {
 		log.Fatal("opening db conn error,", err)
 	}
 
-	db.SetMaxIdleConns(dbConfig.MaxIdleConns)
-	db.SetMaxOpenConns(dbConfig.MaxOpenCons)
-	db.SetConnMaxLifetime(time.Second * time.Duration(dbConfig.ConnMaxLifetime))
-	db.SetConnMaxIdleTime(time.Second * time.Duration(dbConfig.ConnMaxIdleTime))
+	dbInstance.SetMaxIdleConns(dbConfig.MaxIdleConns)
+	dbInstance.SetMaxOpenConns(dbConfig.MaxOpenCons)
+	dbInstance.SetConnMaxLifetime(time.Second * time.Duration(dbConfig.ConnMaxLifetime))
+	dbInstance.SetConnMaxIdleTime(time.Second * time.Duration(dbConfig.ConnMaxIdleTime))
 
-	err = db.Ping()
+	err = dbInstance.Ping()
 	if err != nil {
 		log.Fatal("ping db conn error, ", err)
 	}
 	log.Print("connected to DB")
+
+	runMigration(dbInstance)
 }
 
-func RunningMigration() {
+func runMigration(db *sql.DB) {
 	dbConfig := config.GetConfig().GetDBConfig()
 
 	if !dbConfig.MigrationRun {
