@@ -1,9 +1,11 @@
 package domain
 
 import (
+	"database/sql/driver"
+	"fmt"
 	"strings"
 
-	"github.com/docker/distribution/uuid"
+	"github.com/google/uuid"
 )
 
 type UserRole int
@@ -34,6 +36,24 @@ func ToUserRole(s string) UserRole {
 	default:
 		return UnknownUserRole
 	}
+}
+
+func (u *UserRole) Value() (driver.Value, error) {
+	return u.String(), nil
+}
+
+func (r *UserRole) Scan(value any) error {
+	if value == nil {
+		return nil
+	}
+	b, ok := value.([]byte)
+	if !ok {
+		return fmt.Errorf("scan user role type assertion to byte failed")
+	}
+
+	*r = ToUserRole(string(b))
+
+	return nil
 }
 
 type User struct {
