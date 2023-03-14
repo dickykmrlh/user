@@ -36,7 +36,7 @@ func loadTestFixures(t *testing.T, fixtureName string) {
 	}
 }
 
-func TestUserRepo_GetUser(t *testing.T) {
+func TestUserRepo(t *testing.T) {
 	err := godotenv.Overload("../../test/test.env")
 	require.NoError(t, err)
 
@@ -61,5 +61,24 @@ func TestUserRepo_GetUser(t *testing.T) {
 		actualUser, err := u.GetUser(ctx, expctedUser.ID)
 		assert.Nil(t, err)
 		assert.Equal(t, expctedUser, actualUser)
+	})
+
+	t.Run("Insert user then get user", func(t *testing.T) {
+		userID := uuid.New()
+		user := &domain.User{
+			ID:          userID,
+			FirstName:   "John",
+			LastName:    "Doe",
+			Role:        domain.CustomerUserRole,
+			PhoneNumber: "+628123456789",
+			Email:       "john.doe@aja.com",
+		}
+
+		err := u.Save(ctx, user)
+		assert.Nil(t, err)
+
+		actualUser, err := u.GetUser(ctx, user.ID)
+		assert.Nil(t, err)
+		assert.Equal(t, user, actualUser)
 	})
 }

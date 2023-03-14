@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"database/sql/driver"
 	"fmt"
 	"strings"
 
@@ -35,6 +36,10 @@ func ToUserRole(s string) UserRole {
 	default:
 		return UnknownUserRole
 	}
+}
+
+func (u *UserRole) Value() (driver.Value, error) {
+	return u.String(), nil
 }
 
 func (r *UserRole) Scan(value any) error {

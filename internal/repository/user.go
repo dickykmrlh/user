@@ -37,8 +37,13 @@ func (u *UserRepo) GetUser(ctx context.Context, id uuid.UUID) (user *domain.User
 	return
 }
 
-func (u *UserRepo) Save(user *domain.User) (err error) {
-	return nil
+func (u *UserRepo) Save(ctx context.Context, user *domain.User) (err error) {
+	builder := sq.StatementBuilder.PlaceholderFormat(sq.Dollar).RunWith(u.db)
+	_, err = builder.Insert(usersTableName).
+		Columns(userColumns...).
+		Values(scanColumns(user)...).
+		ExecContext(ctx)
+	return
 }
 
 func scanColumns(record *domain.User) []any {

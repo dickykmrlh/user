@@ -1,6 +1,8 @@
 package port
 
 import (
+	"context"
+
 	"github.com/dickykmrlh/user/internal/core/domain"
 	"github.com/google/uuid"
 )
@@ -11,6 +13,6 @@ type UserService interface {
 }
 
 type UserRepository interface {
-	GetUser(id uuid.UUID) (user *domain.User, err error)
-	Save(user *domain.User) (err error)
+	GetUser(ctx context.Context, id uuid.UUID) (user *domain.User, err error)
+	Save(ctx context.Context, user *domain.User) (err error)
 }
