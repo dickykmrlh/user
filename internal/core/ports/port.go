@@ -8,8 +8,8 @@ import (
 )
 
 type UserService interface {
-	GetUser(id uuid.UUID) (user *domain.User, err error)
-	Create(user *domain.User) (err error)
+	GetUser(ctx context.Context, id uuid.UUID) (user *domain.User, err error)
+	Create(ctx context.Context, firstName, lastName, role, phoneNumber, email string) (err error)
 }
 
 type UserRepository interface {

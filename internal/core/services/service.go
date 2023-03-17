@@ -1,21 +1,30 @@
 package service
 
 import (
+	"context"
+
 	"github.com/dickykmrlh/user/internal/core/domain"
+	port "github.com/dickykmrlh/user/internal/core/ports"
 	"github.com/google/uuid"
 )
 
 type service struct {
+	userRepo port.UserRepository
 }
 
 func New() *service {
 	return &service{}
 }
 
-func (s *service) GetUser(id uuid.UUID) (user *domain.User, err error) {
-	return nil, nil
+func (s *service) GetUser(ctx context.Context, id uuid.UUID) (user *domain.User, err error) {
+	return s.userRepo.GetUser(ctx, id)
 }
 
-func (s *service) Create(user *domain.User) (err error) {
-	return
+func (s *service) Create(ctx context.Context, firstName, lastName, role, phoneNumber, email string) (err error) {
+	user, err := domain.NewUser(firstName, lastName, role, phoneNumber, email)
+	if err != nil {
+		return err
+	}
+
+	return s.userRepo.Save(ctx, user)
 }
