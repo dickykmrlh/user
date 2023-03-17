@@ -64,3 +64,17 @@ type User struct {
 	PhoneNumber string    `json:"phone_number"`
 	Email       string    `json:"email"`
 }
+
+func NewUser(firstName, lastName, role, phoneNumber, email string) (*User, error) {
+	if ToUserRole(role) == UnknownUserRole {
+		return nil, fmt.Errorf("user role is unknown, role: %s", role)
+	}
+	return &User{
+		ID:          uuid.New(),
+		FirstName:   firstName,
+		LastName:    lastName,
+		Role:        ToUserRole(role),
+		PhoneNumber: phoneNumber,
+		Email:       email,
+	}, nil
+}
