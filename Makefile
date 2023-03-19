@@ -2,11 +2,11 @@
 .PHONY: all test clean
 
 SHELL := /bin/bash
-NETWORK := $(shell docker network ls | grep profile-default)
+NETWORK := $(shell docker network ls | grep user-default)
 
 compose-up:
 ifeq ($(NETWORK),)
-	docker network create profile-default
+	docker network create user-default
 endif
 	docker-compose up -d
 
@@ -17,8 +17,8 @@ test:
 	go test ./... -race -count=1 -cover
 
 run:
-	go build -o bin/profile cmd/user.go
-	./bin/profile
+	go build -o bin/user cmd/user.go
+	./bin/user
 
 lint:
 	golangci-lint run ./...
