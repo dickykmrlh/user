@@ -12,8 +12,10 @@ type service struct {
 	userRepo port.UserRepository
 }
 
-func New() *service {
-	return &service{}
+func NewUserService(userRepo port.UserRepository) *service {
+	return &service{
+		userRepo: userRepo,
+	}
 }
 
 func (s *service) GetUser(ctx context.Context, id uuid.UUID) (user *domain.User, err error) {

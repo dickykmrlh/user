@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -15,17 +16,15 @@ import (
 
 var dbInstance *sql.DB
 
-func GetDB() *sql.DB {
+func GetDB() (*sql.DB, error) {
 	if dbInstance == nil {
-		InitDBConn()
-		return dbInstance
+		return dbInstance, errors.New("db is not intialize")
 	}
 
-	return dbInstance
+	return dbInstance, nil
 }
 
-func InitDBConn() {
-	dbConfig := config.GetConfig().GetDBConfig()
+func InitDBConn(dbConfig *config.DB) {
 
 	log.Print("connecting to DB")
 
@@ -53,20 +52,16 @@ func InitDBConn() {
 		log.Fatal("ping db conn error, ", err)
 	}
 	log.Print("connected to DB")
-
-	runMigration(dbInstance)
 }
 
-func runMigration(db *sql.DB) {
-	dbConfig := config.GetConfig().GetDBConfig()
-
+func RunMigration(dbConfig *config.DB) {
 	if !dbConfig.MigrationRun {
 		return
 	}
 
 	log.Print("migration run")
 
-	driver, err := postgres.WithInstance(db, &postgres.Config{})
+	driver, err := postgres.WithInstance(dbInstance, &postgres.Config{})
 	if err != nil {
 		log.Fatal("migration failed, setup driver, ", err)
 	}
