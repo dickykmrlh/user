@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/dickykmrlh/user/config"
+	"github.com/dickykmrlh/user/database"
 	"github.com/dickykmrlh/user/internal/core/domain"
 	"github.com/go-testfixtures/testfixtures/v3"
 	"github.com/google/uuid"
@@ -14,22 +15,11 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func initDBTest(t *testing.T) {
-	t.Helper()
-	err := godotenv.Overload("../../test/test.env")
-	require.NoError(t, err)
-	config.InitConfig()
-	InitDBConn(config.GetConfig().GetDBConfig())
-	RunMigration(config.GetConfig().GetDBConfig())
-}
-
 func loadTestFixures(t *testing.T, fixtureName string) {
 	t.Helper()
-	db, err := GetDB()
-	require.NoError(t, err)
 
 	fixtures, err := testfixtures.New(
-		testfixtures.Database(db),
+		testfixtures.Database(database.GetDB()),
 		testfixtures.Dialect("postgres"),
 		testfixtures.UseAlterConstraint(),
 		testfixtures.Directory(fmt.Sprintf("../../test/fixtures/%s", fixtureName)),
@@ -50,12 +40,15 @@ func loadTestFixures(t *testing.T, fixtureName string) {
 }
 
 func TestUserRepo(t *testing.T) {
-	initDBTest(t)
-	db, err := GetDB()
+	t.Helper()
+	err := godotenv.Overload("../../test/test.env")
 	require.NoError(t, err)
 
+	config.Init()
+	database.Init()
+
 	u := &UserRepo{
-		db: db,
+		db: database.GetDB(),
 	}
 
 	loadTestFixures(t, "user")

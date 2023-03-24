@@ -2,35 +2,33 @@ package main
 
 import (
 	"log"
+	"os"
 
+	"github.com/dickykmrlh/user/api/server"
 	"github.com/dickykmrlh/user/config"
-	service "github.com/dickykmrlh/user/internal/core/services"
-	"github.com/dickykmrlh/user/internal/handler"
-	"github.com/dickykmrlh/user/internal/repository"
+	"github.com/dickykmrlh/user/database"
 	"github.com/joho/godotenv"
+	"github.com/spf13/cobra"
 )
 
 func main() {
-	//config
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("fail to load env variables, ", err)
 	}
-	config.InitConfig()
+	config.Init()
 
-	//repository
-	repository.InitDBConn(config.GetConfig().GetDBConfig())
-	repository.RunMigration(config.GetConfig().GetDBConfig())
-	db, err := repository.GetDB()
-	if err != nil {
-		log.Fatal("fail to get db, ", err)
-	}
-	userRepo := repository.NewUserRepo(db)
+	database.Init()
 
-	//service
-	userSvc := service.NewUserService(userRepo)
+	server := server.New()
 
-	//handler
-	handler := handler.NewUserHandler(userSvc)
+	cmd := RootCommand()
+	cmd.add(&cobra.Command{
+		Use:   "server",
+		Short: "starting web server",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return server.Run()
+		},
+	})
 
-	//cmd := newCommand()
+	os.Exit(cmd.run())
 }

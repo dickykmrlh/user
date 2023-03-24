@@ -8,7 +8,7 @@ import (
 
 var cfg *Config
 
-func InitConfig() {
+func Init() {
 	cfg = &Config{}
 	err := envconfig.Process("", cfg)
 	if err != nil {
@@ -18,7 +18,7 @@ func InitConfig() {
 
 func GetConfig() *Config {
 	if cfg == nil {
-		InitConfig()
+		Init()
 		return cfg
 	}
 
