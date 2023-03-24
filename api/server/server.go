@@ -7,9 +7,9 @@ import (
 	"github.com/dickykmrlh/protos/gen/go/user/v1/user_v1connect"
 )
 
-type Server struc {
-	
+type Server struct {
 }
+
 func Run() {
 	mux := http.NewServeMux()
 	path, handler := user_v1connect.NewUserServiceHandler(&petStoreServiceServer{})
