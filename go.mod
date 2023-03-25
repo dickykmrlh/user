@@ -11,7 +11,7 @@ require (
 require (
 	github.com/Masterminds/squirrel v1.5.3
 	github.com/bufbuild/connect-go v1.5.2
-	github.com/dickykmrlh/protos v0.1.2
+	github.com/dickykmrlh/protos v0.1.4
 	github.com/go-testfixtures/testfixtures/v3 v3.8.1
 	github.com/golang-migrate/migrate/v4 v4.15.2
 	github.com/google/uuid v1.3.0

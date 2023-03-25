@@ -77,7 +77,6 @@ func TestUserRepo(t *testing.T) {
 			LastName:    "Doe",
 			Role:        domain.CustomerUserRole,
 			PhoneNumber: "+628123456789",
-			Email:       "john.doe@aja.com",
 		}
 
 		err := u.Save(ctx, user)
