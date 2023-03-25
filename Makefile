@@ -17,8 +17,8 @@ test:
 	go test ./... -race -count=1 -cover
 
 run:
-	go build -o bin/user cmd/user.go
-	./bin/user
+	go build -o bin/user cmd/*.go
+	./bin/user server
 
 lint:
 	golangci-lint run ./...

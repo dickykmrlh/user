@@ -6,8 +6,8 @@ create table "users"
     "first_name" text not null,
     "last_name" text not null,
     "role" user_role not null,
-    "phone_number" text not null,
-    "email" text not null,
+    "phone_number" text not null default '',
+    "email" text not null default '',
     "created_at" timestamptz not null default now(),
     "updated_at" timestamptz not null default now()
 );

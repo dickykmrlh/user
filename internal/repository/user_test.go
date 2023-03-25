@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/dickykmrlh/user/config"
+	"github.com/dickykmrlh/user/database"
 	"github.com/dickykmrlh/user/internal/core/domain"
 	"github.com/go-testfixtures/testfixtures/v3"
 	"github.com/google/uuid"
@@ -15,8 +17,9 @@ import (
 
 func loadTestFixures(t *testing.T, fixtureName string) {
 	t.Helper()
+
 	fixtures, err := testfixtures.New(
-		testfixtures.Database(GetDB()),
+		testfixtures.Database(database.GetDB()),
 		testfixtures.Dialect("postgres"),
 		testfixtures.UseAlterConstraint(),
 		testfixtures.Directory(fmt.Sprintf("../../test/fixtures/%s", fixtureName)),
@@ -37,12 +40,15 @@ func loadTestFixures(t *testing.T, fixtureName string) {
 }
 
 func TestUserRepo(t *testing.T) {
+	t.Helper()
 	err := godotenv.Overload("../../test/test.env")
 	require.NoError(t, err)
 
-	db := GetDB()
+	config.Init()
+	database.Init()
+
 	u := &UserRepo{
-		db: db,
+		db: database.GetDB(),
 	}
 
 	loadTestFixures(t, "user")
@@ -71,7 +77,6 @@ func TestUserRepo(t *testing.T) {
 			LastName:    "Doe",
 			Role:        domain.CustomerUserRole,
 			PhoneNumber: "+628123456789",
-			Email:       "john.doe@aja.com",
 		}
 
 		err := u.Save(ctx, user)

@@ -12,19 +12,22 @@ type service struct {
 	userRepo port.UserRepository
 }
 
-func New() *service {
-	return &service{}
+func NewUserService(userRepo port.UserRepository) *service {
+	return &service{
+		userRepo: userRepo,
+	}
 }
 
 func (s *service) GetUser(ctx context.Context, id uuid.UUID) (user *domain.User, err error) {
 	return s.userRepo.GetUser(ctx, id)
 }
 
-func (s *service) Create(ctx context.Context, firstName, lastName, role, phoneNumber, email string) (err error) {
-	user, err := domain.NewUser(firstName, lastName, role, phoneNumber, email)
+func (s *service) CreateUser(ctx context.Context, firstName, lastName, phoneNumber, email string, role int) (user *domain.User, err error) {
+	user, err = domain.NewUser(firstName, lastName, phoneNumber, email, role)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return s.userRepo.Save(ctx, user)
+	err = s.userRepo.Save(ctx, user)
+	return
 }

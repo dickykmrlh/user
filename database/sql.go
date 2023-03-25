@@ -1,4 +1,4 @@
-package repository
+package database
 
 import (
 	"database/sql"
@@ -13,21 +13,20 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var dbInstance *sql.DB
+var db *sql.DB
 
 func GetDB() *sql.DB {
-	if dbInstance == nil {
-		InitDBConn()
-		return dbInstance
+	if db == nil {
+		Init()
+		return db
 	}
 
-	return dbInstance
+	return db
 }
 
-func InitDBConn() {
-	dbConfig := config.GetConfig().GetDBConfig()
-
+func Init() {
 	log.Print("connecting to DB")
+	dbConfig := config.GetConfig().GetDBConfig()
 
 	dsn := fmt.Sprintf("host=%s port=%d dbname=%s user=%s password=%s sslmode=%s",
 		dbConfig.Host,
@@ -38,34 +37,32 @@ func InitDBConn() {
 		dbConfig.SSLMode)
 
 	var err error
-	dbInstance, err = sql.Open("postgres", dsn)
+	db, err = sql.Open("postgres", dsn)
 	if err != nil {
 		log.Fatal("opening db conn error,", err)
 	}
 
-	dbInstance.SetMaxIdleConns(dbConfig.MaxIdleConns)
-	dbInstance.SetMaxOpenConns(dbConfig.MaxOpenCons)
-	dbInstance.SetConnMaxLifetime(time.Second * time.Duration(dbConfig.ConnMaxLifetime))
-	dbInstance.SetConnMaxIdleTime(time.Second * time.Duration(dbConfig.ConnMaxIdleTime))
+	db.SetMaxIdleConns(dbConfig.MaxIdleConns)
+	db.SetMaxOpenConns(dbConfig.MaxOpenCons)
+	db.SetConnMaxLifetime(time.Second * time.Duration(dbConfig.ConnMaxLifetime))
+	db.SetConnMaxIdleTime(time.Second * time.Duration(dbConfig.ConnMaxIdleTime))
 
-	err = dbInstance.Ping()
+	err = db.Ping()
 	if err != nil {
 		log.Fatal("ping db conn error, ", err)
 	}
 	log.Print("connected to DB")
 
-	runMigration(dbInstance)
+	runMigration()
 }
 
-func runMigration(db *sql.DB) {
+func runMigration() {
 	dbConfig := config.GetConfig().GetDBConfig()
-
 	if !dbConfig.MigrationRun {
 		return
 	}
 
 	log.Print("migration run")
-
 	driver, err := postgres.WithInstance(db, &postgres.Config{})
 	if err != nil {
 		log.Fatal("migration failed, setup driver, ", err)
