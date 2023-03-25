@@ -19,7 +19,10 @@ func main() {
 
 	database.Init()
 
-	server := server.New()
+	server, err := server.New()
+	if err != nil {
+		log.Fatal("fail to create new server, ", err)
+	}
 
 	cmd := RootCommand()
 	cmd.add(&cobra.Command{

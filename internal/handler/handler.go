@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"errors"
 
 	connect_go "github.com/bufbuild/connect-go"
 	user_v1 "github.com/dickykmrlh/protos/gen/go/user/v1"
@@ -19,9 +20,9 @@ func NewUserHandler(userService port.UserService) *UserHandler {
 }
 
 func (h *UserHandler) GetUser(ctx context.Context, req *connect_go.Request[user_v1.GetUserRequest]) (*connect_go.Response[user_v1.GetUserResponse], error) {
-	return nil, nil
+	return nil, errors.New("not implemented")
 }
 
 func (h *UserHandler) CreateUser(ctx context.Context, req *connect_go.Request[user_v1.CreateUserRequest]) (*connect_go.Response[user_v1.CreateUserResponse], error) {
-	return nil, nil
+	return nil, errors.New("not implemented")
 }

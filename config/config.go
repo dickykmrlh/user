@@ -29,8 +29,18 @@ func (c *Config) GetDBConfig() *DB {
 	return c.DB
 }
 
+func (c *Config) GetHttpConfig() *HTTP {
+	return c.HTTP
+}
+
 type Config struct {
-	DB *DB
+	DB   *DB
+	HTTP *HTTP
+}
+
+type HTTP struct {
+	Host string `envconfig:"HTTP_HOST"`
+	Port int    `envconfig:"HTTP_PORT"`
 }
 
 type DB struct {
