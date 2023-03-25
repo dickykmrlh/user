@@ -9,7 +9,7 @@ import (
 
 type UserService interface {
 	GetUser(ctx context.Context, id uuid.UUID) (user *domain.User, err error)
-	Create(ctx context.Context, firstName, lastName, role, phoneNumber, email string) (err error)
+	CreateUser(ctx context.Context, firstName, lastName, phoneNumber, email string, role int) (user *domain.User, err error)
 }
 
 type UserRepository interface {

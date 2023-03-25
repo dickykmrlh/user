@@ -47,9 +47,18 @@ func (h *UserHandler) CreateUser(ctx context.Context, req *connect_go.Request[us
 		return nil, err
 	}
 
-	if req.Msg.GetUser().GetPhoneNumber() == "" && req.Msg.GetUser().GetEmail() == "" {
-		return nil, errors.New("missing contact information")
+	user, err := h.userService.CreateUser(ctx, req.Msg.GetUser().GetFirstName(), req.Msg.GetUser().GetLastName(), req.Msg.GetUser().GetPhoneNumber(),
+		req.Msg.GetUser().GetEmail(), int(req.Msg.GetUser().GetRole()),
+	)
+	if err != nil {
+		return nil, err
 	}
 
-	return nil, errors.New("not implemented")
+	if user == nil {
+		return &connect_go.Response[user_v1.CreateUserResponse]{}, errors.New("nil user got on create user")
+	}
+
+	return connect.NewResponse(&user_v1.CreateUserResponse{
+		User: user.Tov1User(),
+	}), nil
 }

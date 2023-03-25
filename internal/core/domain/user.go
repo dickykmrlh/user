@@ -2,7 +2,9 @@ package domain
 
 import (
 	"database/sql/driver"
+	"errors"
 	"fmt"
+	"regexp"
 	"strings"
 
 	user_v1 "github.com/dickykmrlh/protos/gen/go/user/v1"
@@ -16,6 +18,8 @@ const (
 	SuperAdminUserRole
 	CustomerUserRole
 )
+
+var _indonesianPhoneNumberPattern = regexp.MustCompile("^[+62]{2}[0-9]{9,}")
 
 func (r UserRole) String() string {
 	switch r {
@@ -77,16 +81,37 @@ func (u User) Tov1User() *user_v1.User {
 	}
 }
 
-func NewUser(firstName, lastName, role, phoneNumber, email string) (*User, error) {
-	if ToUserRole(role) == UnknownUserRole {
-		return nil, fmt.Errorf("user role is unknown, role: %s", role)
+func NewUser(firstName, lastName, phoneNumber, email string, role int) (*User, error) {
+	if UserRole(role).String() == UnknownUserRole.String() {
+		return nil, fmt.Errorf("user role is unknown, role: %d", role)
 	}
+
+	if phoneNumber == "" && email == "" {
+		return nil, errors.New("missing contact information")
+	}
+
+	if phoneNumber != "" {
+		if matched := _indonesianPhoneNumberPattern.MatchString(phoneNumber); !matched {
+			return nil, errors.New("phone number didnt matched")
+		}
+	}
+
 	return &User{
-		ID:          uuid.New(),
-		FirstName:   firstName,
-		LastName:    lastName,
-		Role:        ToUserRole(role),
-		PhoneNumber: phoneNumber,
-		Email:       email,
+		ID:        uuid.New(),
+		FirstName: firstName,
+		LastName:  lastName,
+		Role:      UserRole(role),
+		PhoneNumber: func(phone string) string {
+			if phone == "" {
+				return ""
+			}
+
+			if phone[0] != '+' {
+				return "+" + phone
+			}
+
+			return phone
+		}(phoneNumber),
+		Email: email,
 	}, nil
 }
