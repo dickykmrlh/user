@@ -1,4 +1,4 @@
-package server
+package app
 
 import (
 	"fmt"
@@ -19,7 +19,7 @@ type Server struct {
 	handler *handler.UserHandler
 }
 
-func New() (*Server, error) {
+func NewServer() (*Server, error) {
 	userRepo := repository.NewUserRepo(database.GetDB())
 	userSvc := service.NewUserService(userRepo)
 	return &Server{
