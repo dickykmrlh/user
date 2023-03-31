@@ -1,15 +1,15 @@
 version: "3.9"
 
 services:
-  user-db:
+  user_db_postgres:
     image: postgres:latest
     command:
       ["postgres", "-c", "log_statement=all", "-c", "log_destination=stderr"]
-    container_name: user-db
+    container_name: user_db_postgres
     ports:
       - 54321:5432
     networks:
-      - user-default
+      - user-networks
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: user
@@ -17,5 +17,4 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
 
 networks:
-  user-default:
-    external: true
+  user-networks: {}
