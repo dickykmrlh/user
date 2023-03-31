@@ -6,7 +6,7 @@ NETWORK := $(shell docker network ls | grep user-default)
 
 compose-up:
 ifeq ($(NETWORK),)
-	docker network create user-default
+	docker network create user-networks
 endif
 	docker-compose up -d
 
@@ -22,3 +22,7 @@ run:
 
 lint:
 	golangci-lint run ./...
+
+docker-run:
+	docker build --tag user .
+	docker run --network=user_user-networks --env-file=test.env user server

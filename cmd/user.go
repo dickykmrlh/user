@@ -28,7 +28,7 @@ func run(cmd *cobra.Command) int {
 
 func main() {
 	if err := godotenv.Load(); err != nil {
-		log.Fatal("fail to load env variables, ", err)
+		log.Print("fail to load env variables, ", err)
 	}
 	config.Init()
 
